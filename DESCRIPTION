@@ -1,0 +1,50 @@
+Package: PICH
+Type: Package
+Title: Priority Index Approach to Clonal Hematopoiesis for Therapeutic Candidate Identification
+Version: 1.0.0
+Date: 2022-10-28
+Authors@R: c(person("Hai", "Fang", email="fh12355@rjh.com.cn", role=c("aut","cre")))
+Maintainer: Hai Fang <fh12355@rjh.com.cn>
+Depends: R (>= 4.2.0), igraph, ggplot2
+Imports: BiocGenerics, dplyr, forcats, GenomicRanges, ggnetwork, ggrepel, IRanges, magrittr, Matrix, methods, osfr, purrr, readr, stats, stringr, tibble, tidyr, XML, pbapply, curl
+Suggests: coin, foreach, ggraph, ggridges, grid, gridExtra, MatrixEQTL, RColorBrewer, ROCR, ggupset, rtracklayer, Gviz, MASS, dnet, graphics, grDevices, S4Vectors, utils, ggbio, GenomeInfoDb, doParallel, fgsea, scales, supraHex, data.tree, jsonlite
+Description: This package is designed to identify therapeutic candidates (both therapeutic targets and repurposed drugs) based on multi-layered datasets related to clonal hematopoiesis (defined as the clonal expansion of a blood stem cell and its progeny).
+Collate:
+    'ClassMethod-PICH.r'
+    'oRDS.r'
+    'oDefineNet.r'
+    'oIG2TB.r'
+    'oTB2IG.r'
+    'oNetInduce.r'
+    'oPierAnno.r'
+    'oPierGenes.r'
+    'oPier.r'
+    'oRWR.r'
+    'oCheckParallel.r'
+    'oSymbol2GeneID.r'
+    'oPierMatrix.r'
+    'oSparseMatrix.r'
+    'oPierManhattan.r'
+    'oSEAadv.r'
+    'oSEA.r'
+    'oSEAextract.r'
+    'oSEAballoon.r'
+    'oColormap.r'
+    'oCombineNet.r'
+    'oPierSubnet.r'
+    'oSubneterGenes.r'
+    'oLayout.r'
+    'oVisEvidenceAdv.r'
+    'oVisEvidence.r'
+    'oGGnetwork.r'
+    'oPieplot.r'
+    'oSEAupset.r'
+    'oDAGinduce.r'
+    'oSEAggraph.r'
+    'oGGraph.r'
+    'oRepurpose.r'
+    'oHeatmap.r'
+    'oAttack.r'
+    'oUpsetAdv.r'
+License: GPL-2
+biocViews: SystemsBiology, GeneTarget, Pathways, Network
