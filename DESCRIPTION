@@ -2,12 +2,12 @@ Package: PICH
 Type: Package
 Title: Priority Index Approach to Clonal Hematopoiesis Therapeutics
 Version: 1.0.0
-Date: 2022-10-29
+Date: 2022-10-31
 Authors@R: c(person("Hai", "Fang", email="fh12355@rjh.com.cn", role=c("aut","cre")))
 Maintainer: Hai Fang <fh12355@rjh.com.cn>
 Depends: R (>= 4.2.0), igraph, ggplot2
-Imports: dplyr, forcats, GenomicRanges, ggnetwork, ggrepel, Matrix, osfr, purrr, stats, stringr, tibble, tidyr, pbapply, curl
-Suggests: foreach, ggraph, grid, gridExtra, RColorBrewer, ggupset, dnet, graphics, grDevices, utils, ggbio, GenomeInfoDb, doParallel, scales, supraHex
+Imports: dplyr, forcats, GenomicRanges, ggnetwork, ggrepel, Matrix, osfr, purrr, stats, stringr, tibble, tidyr, pbapply, curl, ggraph
+Suggests: foreach, grid, gridExtra, RColorBrewer, ggupset, dnet, graphics, grDevices, utils, ggbio, GenomeInfoDb, doParallel, scales, supraHex
 Description: This package is designed to identify therapeutic candidates (both therapeutic targets and repurposed drugs) based on multi-layered datasets related to clonal hematopoiesis (defined as the clonal expansion of the blood stem cell and its progeny).
 Collate:
     'ClassMethod-PICH.r'
