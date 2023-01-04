@@ -203,8 +203,7 @@ title='')
 ###########################
 # load PhasedTargets
 # restricted to disease ('EFO:0000408') or immune system disease ('EFO:0000540')
-g <- xRDataLoader(RData.customised='ig.PhasedTargets',
-RData.location=RData.location)
+g <- oRDS(RData.customised='ig.PhasedTargets', placeholder=placeholder)
 neighs.out <- igraph::neighborhood(g, order=vcount(g),
 nodes="EFO:0000408", mode="out")
 nodeInduced <- V(g)[unique(unlist(neighs.out))]$name

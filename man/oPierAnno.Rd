@@ -176,7 +176,7 @@ The input graph will treat as an unweighted graph if there is no
 \dontrun{
 # a) provide the seed nodes/genes with the weight info
 ## load ImmunoBase
-ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase',
+ImmunoBase <- oRDS(RData.customised='ImmunoBase',
 placeholder=placeholder)
 ## get genes within 500kb away from AS GWAS lead SNPs
 seeds.genes <- ImmunoBase$AS$genes_variants

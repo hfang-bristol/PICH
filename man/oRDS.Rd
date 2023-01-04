@@ -31,8 +31,10 @@ To enable 'guid', please also install a package "osfr" via
 \code{BiocManager::install("osfr",dependencies=TRUE)}.
 }
 \examples{
-placeholder <- 'http://www.comptransmed.pro/bigdata_ctm'
 placeholder <- 'http://www.comptransmed.pro/bigdata_fdb'
+placeholder <- 'http://www.comptransmed.pro/bigdata_ctm'
+placeholder <- 'http://www.comptransmed.pro/bigdata_pich'
+placeholder <- 'http://www.comptransmed.pro/bigdata_pia'
 \dontrun{
 org.Hs.eg <- oRDS('org.Hs.eg', placeholder=placeholder)
 }

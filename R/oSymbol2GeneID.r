@@ -19,7 +19,7 @@
 #' 
 #' # a) provide the input Genes of interest (eg 100 randomly chosen human genes)
 #' ## load human genes
-#' org.Hs.eg <- oRDS('org.Hs.eg', placeholder='http://www.comptransmed.pro/bigdata_ctm')
+#' org.Hs.eg <- oRDS('org.Hs.eg', placeholder=placeholder)
 #' Symbol <- sample(org.Hs.eg$info$Symbol, 100)
 #' Symbol
 #' 

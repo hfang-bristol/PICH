@@ -57,7 +57,7 @@ to igraph- or sna-style layout.
 \dontrun{
 # load REACTOME
 # restricted to Immune System ('R-HSA-168256') or Signal Transduction ('R-HSA-162582')
-g <- oRDS('ig.REACTOME')
+g <- oRDS('ig.REACTOME', placeholder=placeholder)
 neighs.out <- igraph::neighborhood(g, order=vcount(g),
 nodes="R-HSA-168256", mode="out")
 nodeInduced <- V(g)[unique(unlist(neighs.out))]$name

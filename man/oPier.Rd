@@ -92,12 +92,10 @@ The input graph will treat as an unweighted graph if there is no
 # a) provide the input nodes/genes with the significance info
 sig <- rbeta(500, shape1=0.5, shape2=1)
 \dontrun{
-org.Hs.eg <- oRDS('org.Hs.eg',
-placeholder='http://www.comptransmed.pro/bigdata_ctm')
+org.Hs.eg <- oRDS('org.Hs.eg', placeholder=placeholder)
 
 # b) provide the network
-g <- oRDS('org.Hs.PCommons_UN',
-placeholder='http://www.comptransmed.pro/bigdata_ctm')
+g <- oRDS('org.Hs.PCommons_UN', placeholder=placeholder)
 
 # c) perform priority analysis
 pNode <- oPier(seeds=data, g=g, restart=0.75)

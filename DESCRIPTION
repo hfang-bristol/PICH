@@ -2,7 +2,7 @@ Package: PICH
 Type: Package
 Title: Priority Index Approach to Clonal Hematopoiesis Therapeutics
 Version: 1.0.0
-Date: 2022-10-31
+Date: 2023-1-4
 Authors@R: c(person("Hai", "Fang", email="fh12355@rjh.com.cn", role=c("aut","cre")))
 Maintainer: Hai Fang <fh12355@rjh.com.cn>
 Depends: R (>= 4.2.0), igraph, ggplot2

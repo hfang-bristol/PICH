@@ -32,7 +32,7 @@
 #' \dontrun{
 #' # a) provide the seed nodes/genes with the weight info
 #' ## load ImmunoBase
-#' ImmunoBase <- xRDataLoader(RData.customised='ImmunoBase', placeholder=placeholder)
+#' ImmunoBase <- oRDS(RData.customised='ImmunoBase', placeholder=placeholder)
 #' ## get genes within 500kb away from AS GWAS lead SNPs
 #' seeds.genes <- ImmunoBase$AS$genes_variants
 #' ## seeds weighted according to distance away from lead SNPs

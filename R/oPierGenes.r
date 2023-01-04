@@ -35,7 +35,7 @@
 #' data <- 1- seeds.genes/500000
 #'
 #' # b) perform priority analysis
-#' pNode <- oPierGenes(data=data, network="PCommonsDN_medium",restart=0.7, RData.location=RData.location)
+#' pNode <- oPierGenes(data=data, network="PCommonsDN_medium",restart=0.7, placeholder=placeholder)
 #'
 #' # c) save to the file called 'Genes_priority.txt'
 #' write.table(pNode$priority, file="Genes_priority.txt", sep="\t", row.names=FALSE)
