@@ -35,11 +35,13 @@
 #' write.table(DR$index, file="oRepurpose_index.txt", sep="\t", row.names=F, quote=F)
 #' }
 
-oRepurpose <- function(data, phase.min=3, target.max=5, plot=TRUE, verbose=T, DTT=c("ChEMBL_v29","ChEMBL_v27","ChEMBL_v26","ChEMBL_v25"), restricted=NULL, excluded=NULL, placeholder=NULL, guid=NULL, ...)
+oRepurpose <- function(data, phase.min=4, target.max=5, plot=TRUE, verbose=T, DTT=c("ChEMBL_v29","ChEMBL_v27","ChEMBL_v26","ChEMBL_v25"), restricted=NULL, excluded=NULL, placeholder=NULL, guid=NULL, ...)
 {
     
+    ChEMBL <- NULL
+    
 	if(is(DTT,"data.frame")){
-			ChEMBL <- DTT
+		ChEMBL <- DTT %>% as.data.frame()
 	}else{
 		ChEMBL <- oRDS(DTT[1], verbose=verbose, placeholder=placeholder, guid=guid)
 		if(is.null(ChEMBL)){
@@ -47,6 +49,11 @@ oRepurpose <- function(data, phase.min=3, target.max=5, plot=TRUE, verbose=T, DT
 			return(NULL)
 		}
     }
+    
+	if(!(all('target_number' %in% colnames(ChEMBL)))){
+		target_number <- NULL
+		ChEMBL <- ChEMBL %>% mutate(target_number=1)
+	}
     
 	if(!(all(c('target_number','efo_term','phase','pref_name_drug','Symbol') %in% colnames(ChEMBL)))){
 		warnings("The input data.frame does not contain required columns: c('target_number','efo_term','phase','pref_name_drug','Symbol').\n")

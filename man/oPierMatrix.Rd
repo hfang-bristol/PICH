@@ -12,7 +12,8 @@ aggregateBy = c("none", "fishers", "logistic", "Ztransform",
 "orderStatistic",
 "harmonic", "max", "sum"),
 rangeMax = 5,
-keep = TRUE,
+keep = FALSE,
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
 verbose = TRUE,
 placeholder = NULL,
 guid = NULL
@@ -50,6 +51,19 @@ default, it sets to 5}
 
 \item{keep}{logical to indicate whether the input list_pNode is kept.
 By default, it sets to true to keep}
+
+\item{GR.Gene}{the genomic regions of genes. By default, it is
+'UCSC_knownGene', that is, UCSC known genes (together with genomic
+locations) based on human genome assembly hg19. It can be
+'UCSC_knownCanonical', that is, UCSC known canonical genes (together
+with genomic locations) based on human genome assembly hg19.
+Alternatively, the user can specify the customised input. To do so,
+first save your RData file (containing an GR object) into your local
+computer, and make sure the GR object content names refer to Gene
+Symbols. Then, tell "GR.Gene" with your RData file name (with or
+without extension), plus specify your file RData path in
+"RData.location". Note: you can also load your customised GR object
+directly}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display}

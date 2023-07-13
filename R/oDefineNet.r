@@ -77,12 +77,8 @@ oDefineNet <- function(network=c("STRING_highest","STRING_high","STRING_medium",
 		if(length(STRING.only)>0){
 			. <- NULL
 			#df_edges %>% dplyr::filter_at(dplyr::vars(STRING.only),dplyr::any_vars(.>0)) -> df_edges
-			df_edges %>% dplyr::filter_at(dplyr::all_of(STRING.only),dplyr::any_vars(.>0)) -> df_edges
+			df_edges <- df_edges %>% dplyr::filter_at(dplyr::all_of(STRING.only),dplyr::any_vars(.>0)) %>% suppressWarnings()
 		}
-		
-		
-		
-		all_of(STRING.only)
 		
 		## weighted or not
 		if(weighted){

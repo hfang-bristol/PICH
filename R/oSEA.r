@@ -98,7 +98,7 @@
 #' gp1 + theme(legend.box='vertical') + guides(edge_colour=guide_legend('namespace',direction="vertical"), size=guide_legend('-log10(FDR)','top',direction="horizontal",ncol=3), color=guide_colorbar('Z-score','top',direction="horizontal",barheight=0.5)) + theme(legend.position='right')
 #' }
 
-oSEA <- function(data, set, ig=NULL, background=NULL, size.range=c(10,2000), min.overlap=5, which.distance=NULL, test=c("fisher","hypergeo","binomial"), background.annotatable.only=NULL, p.tail=c("one-tail","two-tails"), p.adjust.method=c("BH", "BY", "bonferroni", "holm", "hochberg", "hommel"), ontology.algorithm=c("none","pc","elim","lea"), elim.pvalue=1e-2, lea.depth=2, path.mode=c("all_paths","shortest_paths","all_shortest_paths"), true.path.rule=FALSE, verbose=TRUE)
+oSEA <- function(data, set, ig=NULL, background=NULL, size.range=c(10,2000), min.overlap=3, which.distance=NULL, test=c("fisher","hypergeo","binomial"), background.annotatable.only=NULL, p.tail=c("one-tail","two-tails"), p.adjust.method=c("BH", "BY", "bonferroni", "holm", "hochberg", "hommel"), ontology.algorithm=c("none","pc","elim","lea"), elim.pvalue=1e-2, lea.depth=2, path.mode=c("all_paths","shortest_paths","all_shortest_paths"), true.path.rule=FALSE, verbose=TRUE)
 {
 
   ####################################################################################

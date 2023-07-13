@@ -39,7 +39,14 @@ oVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","simple"
 {
 
     node.info <- match.arg(node.info)
-
+	
+	##############################
+	if(is(xTarget$priorty,"tbl")){
+		name1 <- NULL
+		xTarget$priorty <- xTarget$priorty %>%  dplyr::mutate(name1=name) %>%  tibble::column_to_rownames("name1")
+	}
+	##############################
+	
     if(is(xTarget,"dTarget")){
     	if(is.null(xTarget$pPerf)){
     		df_evidence <- xTarget$priority[, 5:ncol(xTarget$priority)]

@@ -10,8 +10,6 @@ normalise = c("laplacian", "row", "column", "none"),
 setSeeds = NULL,
 restart = 0.75,
 normalise.affinity.matrix = c("none", "quantile"),
-parallel = TRUE,
-multicores = NULL,
 verbose = TRUE
 )
 }
@@ -52,16 +50,6 @@ affinity matrix. It can be 'none' for no normalisation, 'quantile' for
 quantile normalisation to ensure that columns (if multiple) of the
 output affinity matrix have the same quantiles}
 
-\item{parallel}{logical to indicate whether parallel computation with
-multicores is used. By default, it sets to true, but not necessarily
-does so. It will depend on whether these two packages "foreach" and
-"doParallel" have been installed}
-
-\item{multicores}{an integer to specify how many cores will be
-registered as the multicore parallel backend to the 'foreach' package.
-If NULL, it will use a half of cores available in a user's computer.
-This option only works when parallel computation is enabled}
-
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display}
 }
@@ -90,8 +78,7 @@ the input graph. If the seeds (i.e. a set of starting nodes) are given,
 it intends to calculate the affinity score of all nodes in the graph to
 the seeds. If the seeds are not given, it will pre-compute affinity
 matrix for nodes in the input graph with respect to each starting node
-(as a seed) by looping over every node in the graph. Parallel computing
-is also supported.
+(as a seed) by looping over every node in the graph.
 }
 \note{
 The input graph will treat as an unweighted graph if there is no
@@ -108,8 +95,7 @@ subg <- oNetInduce(g, V(g), knn=0)
 V(subg)$name <- 1:vcount(subg)
 
 # 3) obtain the pre-computated affinity matrix
-PTmatrix <- oRWR(g=subg, normalise="laplacian", restart=0.75,
-parallel=FALSE)
+PTmatrix <- oRWR(g=subg, normalise="laplacian", restart=0.75)
 # visualise affinity matrix
 visHeatmapAdv(as.matrix(PTmatrix), Rowv=FALSE, Colv=FALSE,
 colormap="wyr", KeyValueName="Affinity")
@@ -123,7 +109,7 @@ setSeeds <- data.frame(aSeeds,bSeeds)
 rownames(setSeeds) <- 1:5
 # calcualte affinity matrix
 PTmatrix <- oRWR(g=subg, normalise="laplacian", setSeeds=setSeeds,
-restart=0.75, parallel=FALSE)
+restart=0.75)
 PTmatrix
 }
 }

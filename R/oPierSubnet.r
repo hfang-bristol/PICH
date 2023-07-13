@@ -28,7 +28,7 @@
 #' subnet <- oPierSubnet(pNode, priority.quantile=0.1, subnet.size=50)
 #' }
 
-oPierSubnet <- function(pNode, priority.quantile=0.1, network=NA, STRING.only=NA, network.customised=NULL, subnet.significance=0.01, subnet.size=NULL, test.permutation=FALSE, num.permutation=100, respect=c("none","degree"), aggregateBy=c("Ztransform","fishers","logistic","orderStatistic"), verbose=TRUE, placeholder=NULL, guid=NULL)
+oPierSubnet <- function(pNode, priority.quantile=0.1, network=NA, STRING.only=NA, network.customised=NULL, subnet.significance=0.01, subnet.size=NULL, test.permutation=FALSE, num.permutation=100, respect=c("none","degree"), aggregateBy=c("fishers","Ztransform","logistic","orderStatistic"), verbose=TRUE, placeholder=NULL, guid=NULL)
 {
 
     startT <- Sys.time()
@@ -43,7 +43,7 @@ oPierSubnet <- function(pNode, priority.quantile=0.1, network=NA, STRING.only=NA
     aggregateBy <- match.arg(aggregateBy)
     
     if(is(pNode,"pNode")){
-        df_priority <- pNode$priority[, c("seed","weight","priority")]
+        df_priority <- pNode$priority[, c("name","seed","weight","priority")] %>% tibble::column_to_rownames("name")
         
 		network <- network[1]
 		if(!is.na(network)){
@@ -63,7 +63,7 @@ oPierSubnet <- function(pNode, priority.quantile=0.1, network=NA, STRING.only=NA
 		pval <- 10^(-100*y)
 		
 	}else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
-    	df_priority <- pNode$priority[, c("name","rank","rating")]
+    	df_priority <- pNode$priority[, c("name","rank","rating")] %>% tibble::column_to_rownames("name")
     	df_priority$priority <- df_priority$rating
     	
     	network <- network[1]

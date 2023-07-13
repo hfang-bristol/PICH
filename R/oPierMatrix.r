@@ -8,6 +8,7 @@
 #' @param aggregateBy the aggregate method used. It can be either "none" for no aggregation, or "orderStatistic" for the method based on the order statistics of p-values, "fishers" for Fisher's method, "Ztransform" for Z-transform method, "logistic" for the logistic method. Without loss of generality, the Z-transform method does well in problems where evidence against the combined null is spread widely (equal footings) or when the total evidence is weak; Fisher's method does best in problems where the evidence is concentrated in a relatively small fraction of the individual tests or when the evidence is at least moderately strong; the logistic method provides a compromise between these two. Notably, the aggregate methods 'fishers' and 'logistic' are preferred here. Also supported are methods summing up evidence 'sum', taking the maximum of evidence ('max') or sequentially weighting evidence 'harmonic'
 #' @param rangeMax the maximum range of the top prioritisation. By default, it sets to 5
 #' @param keep logical to indicate whether the input list_pNode is kept. By default, it sets to true to keep
+#' @param GR.Gene the genomic regions of genes. By default, it is 'UCSC_knownGene', that is, UCSC known genes (together with genomic locations) based on human genome assembly hg19. It can be 'UCSC_knownCanonical', that is, UCSC known canonical genes (together with genomic locations) based on human genome assembly hg19. Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to Gene Symbols. Then, tell "GR.Gene" with your RData file name (with or without extension), plus specify your file RData path in "RData.location". Note: you can also load your customised GR object directly
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @param placeholder the characters to tell the location of built-in RData files. See \code{\link{oRDS}} for details
 #' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{oRDS}} for details
@@ -38,7 +39,7 @@
 #' dTarget <- oPierMatrix(ls_pNode, displayBy="pvalue", aggregateBy="fishers")
 #' }
 
-oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue","evidence"), combineBy=c('union','intersect'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic","harmonic","max","sum"), rangeMax=5, keep=TRUE, verbose=TRUE, placeholder=NULL, guid=NULL)
+oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue","evidence"), combineBy=c('union','intersect'), aggregateBy=c("none","fishers","logistic","Ztransform","orderStatistic","harmonic","max","sum"), rangeMax=5, keep=FALSE, GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), verbose=TRUE, placeholder=NULL, guid=NULL)
 {
 
     startT <- Sys.time()
@@ -82,14 +83,30 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 	}
 	nodes <- sort(nodes)
 	
+	#######################################################
+	if(is(GR.Gene,"GRanges")){
+		gr_Gene <- GR.Gene
+	}else{
+		gr_Gene <- oRDS(GR.Gene[1], verbose=verbose, placeholder=placeholder, guid=guid)
+		if(is.null(gr_Gene)){
+			GR.Gene <- "UCSC_knownGene"
+			if(verbose){
+				message(sprintf("Instead, %s will be used", GR.Gene), appendLF=TRUE)
+			}
+			gr_Gene <- oRDS(GR.Gene, verbose=verbose, placeholder=placeholder, guid=guid)
+		}
+    }
+	#######################################################
+	
 	if(displayBy=='evidence' | (displayBy=='pvalue' & aggregateBy!="none") | (displayBy=='score' & (aggregateBy %in% c("harmonic","max","sum")))){
 		############
 		## seed info
+		seed <- name <- NULL
 		predictor_names <- names(list_pNode)
 		predictor_names <- gsub('_.*', '', predictor_names)
 		ls_df <- lapply(1:length(list_pNode), function(i){
 			pNode <- list_pNode[[i]]
-			genes <- rownames(pNode$priority)[pNode$priority$seed==1]
+			genes <- pNode$priority %>% dplyr::filter(seed==1) %>% dplyr::pull(name)
 			df <- data.frame(Gene=genes, Predictor=rep(predictor_names[i], length(genes)), stringsAsFactors=FALSE)
 		})
 		df <- do.call(rbind, ls_df)
@@ -134,7 +151,7 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 	if(displayBy!='evidence'){
 		## Combine into a data frame called 'df_predictor'
 		ls_priority <- pbapply::pblapply(list_pNode, function(pNode){
-			p <- pNode$priority
+			p <- pNode$priority %>% tibble::column_to_rownames('name')
 			ind <- match(nodes, rownames(p))
 			#ind <- ind[!is.na(ind)]
 			if(displayBy=='score' | displayBy=='pvalue'){
@@ -192,9 +209,11 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			
 			## df_priority
 			df_priority <- data.frame(name=names(df_ap), rank=df_rank, pvalue=df_ap, fdr=df_adjp, rating=rating, stringsAsFactors=FALSE)
-			### add description
-			df_priority$description <- oSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, placeholder=placeholder, guid=guid)$description
-			###
+			### add description (based on NCBI genes)
+			#df_priority$description <- oSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, placeholder=placeholder, guid=guid)$description
+			### add description (now based on UCSC genes)
+			ind <- match(df_priority$name, names(gr_Gene))
+			df_priority$description <- gr_Gene$Description[ind]
 			
 			## df_predictor
 			ind <- match(names(df_ap), rownames(df_predictor))
@@ -245,6 +264,9 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 				ind <- match(unique(predictor_names), colnames(mat_evidence))
 			}
 			priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=FALSE)
+			
+			priority <- priority %>% tibble::as_tibble()
+			df_predictor <- df_predictor %>% tibble::as_tibble()
 			
 			if(keep){
 				dTarget <- list(priority  = priority,
@@ -304,9 +326,11 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 			
 			## df_priority
 			df_priority <- data.frame(name=names(df_harmonic), rank=df_rank, harmonic=df_harmonic, rating=rating, stringsAsFactors=FALSE)
-			### add description
-			df_priority$description <- oSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, placeholder=placeholder, guid=guid)$description
-			###
+			### add description (based on NCBI genes)
+			#df_priority$description <- oSymbol2GeneID(df_priority$name, details=TRUE, verbose=verbose, placeholder=placeholder, guid=guid)$description
+			### add description (now based on UCSC genes)
+			ind <- match(df_priority$name, names(gr_Gene))
+			df_priority$description <- gr_Gene$Description[ind]
 			
 			## df_predictor
 			ind <- match(names(df_harmonic), rownames(df_predictor))
@@ -356,6 +380,9 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 				ind <- match(unique(predictor_names), colnames(mat_evidence))
 			}
 			priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=FALSE)
+			
+			priority <- priority %>% tibble::as_tibble()
+			df_predictor <- df_predictor %>% tibble::as_tibble()
 			
 			if(keep){
 				dTarget <- list(priority  = priority,

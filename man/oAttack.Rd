@@ -28,7 +28,8 @@ attack. Only works when measure is 'combine'}
 a tibble with 4 columns, including 'measure', 'frac.disconnected'
 (fraction of network nodes disconnected from the giant component),
 'frac.removed' (fraction of network nodes removed), 'nodes.removed'
-(nodes removed, provided separated by ',').
+(nodes removed, provided separated by ','), and 'i' for the number of
+nodes removed.
 }
 \description{
 \code{oAttack} is supposed to perform targeted or combinatory attack

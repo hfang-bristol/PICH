@@ -141,6 +141,8 @@ none
 \dontrun{
 sets <- tibble(onto=c('GOMF','GOBP','KEGG','Bucket','PSG')[c(1)]) \%>\%
 mutate(set=map(onto,~oRDS(str_c("org.Hs.eg",.x),placeholder=placeholder)))
+
+BioGRID_HCoV <- oRDS("BioGRID_HCoV", placeholder=placeholder)
 list_vec <- BioGRID_HCoV \%>\% nest(data=-from_tax) \%>\%
 mutate(gene=map(data,~pull(.x,to))) \%>\% select(-data) \%>\% deframe()
 

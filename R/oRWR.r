@@ -1,14 +1,12 @@
 #' Function to implement Random Walk with Restart (RWR) on the input graph
 #'
-#' \code{oRWR} is supposed to implement Random Walk with Restart (RWR) on the input graph. If the seeds (i.e. a set of starting nodes) are given, it intends to calculate the affinity score of all nodes in the graph to the seeds. If the seeds are not given, it will pre-compute affinity matrix for nodes in the input graph with respect to each starting node (as a seed) by looping over every node in the graph. Parallel computing is also supported.
+#' \code{oRWR} is supposed to implement Random Walk with Restart (RWR) on the input graph. If the seeds (i.e. a set of starting nodes) are given, it intends to calculate the affinity score of all nodes in the graph to the seeds. If the seeds are not given, it will pre-compute affinity matrix for nodes in the input graph with respect to each starting node (as a seed) by looping over every node in the graph.
 #'
 #' @param g an object of class "igraph" or "graphNEL"
 #' @param normalise the way to normalise the adjacency matrix of the input graph. It can be 'laplacian' for laplacian normalisation, 'row' for row-wise normalisation, 'column' for column-wise normalisation, or 'none'
 #' @param setSeeds an input matrix used to define sets of starting seeds. One column corresponds to one set of seeds that a walker starts with. The input matrix must have row names, coming from node names of input graph, i.e. V(g)$name, since there is a mapping operation. The non-zero entries mean that the corresonding rows (i.e. the gene/row names) are used as the seeds, and non-zero values can be viewed as how to weight the relative importance of seeds. By default, this option sets to "NULL", suggesting each node in the graph will be used as a set of the seed to pre-compute affinity matrix for the input graph. This default does not scale for large input graphs since it will loop over every node in the graph; however, the pre-computed affinity matrix can be extensively reused for obtaining affinity scores between any combinations of nodes/seeds, allows for some flexibility in the downstream use, in particular when sampling a large number of random node combinations for statistical testing
 #' @param restart the restart probability used for RWR. The restart probability takes the value from 0 to 1, controlling the range from the starting nodes/seeds that the walker will explore. The higher the value, the more likely the walker is to visit the nodes centered on the starting nodes. At the extreme when the restart probability is zero, the walker moves freely to the neighbors at each step without restarting from seeds, i.e., following a random walk (RW)
 #' @param normalise.affinity.matrix the way to normalise the output affinity matrix. It can be 'none' for no normalisation, 'quantile' for quantile normalisation to ensure that columns (if multiple) of the output affinity matrix have the same quantiles
-#' @param parallel logical to indicate whether parallel computation with multicores is used. By default, it sets to true, but not necessarily does so. It will depend on whether these two packages "foreach" and "doParallel" have been installed
-#' @param multicores an integer to specify how many cores will be registered as the multicore parallel backend to the 'foreach' package. If NULL, it will use a half of cores available in a user's computer. This option only works when parallel computation is enabled
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to true for display
 #' @return It returns a sparse matrix, called 'PTmatrix':
 #' \itemize{
@@ -30,7 +28,7 @@
 #' V(subg)$name <- 1:vcount(subg)
 #'
 #' # 3) obtain the pre-computated affinity matrix
-#' PTmatrix <- oRWR(g=subg, normalise="laplacian", restart=0.75, parallel=FALSE)
+#' PTmatrix <- oRWR(g=subg, normalise="laplacian", restart=0.75)
 #' # visualise affinity matrix
 #' visHeatmapAdv(as.matrix(PTmatrix), Rowv=FALSE, Colv=FALSE, colormap="wyr", KeyValueName="Affinity")
 #' 
@@ -42,11 +40,11 @@
 #' setSeeds <- data.frame(aSeeds,bSeeds)
 #' rownames(setSeeds) <- 1:5
 #' # calcualte affinity matrix
-#' PTmatrix <- oRWR(g=subg, normalise="laplacian", setSeeds=setSeeds, restart=0.75, parallel=FALSE)
+#' PTmatrix <- oRWR(g=subg, normalise="laplacian", setSeeds=setSeeds, restart=0.75)
 #' PTmatrix
 #' }
 
-oRWR <- function(g, normalise=c("laplacian","row","column","none"), setSeeds=NULL, restart=0.75, normalise.affinity.matrix=c("none","quantile"), parallel=TRUE, multicores=NULL, verbose=TRUE)
+oRWR <- function(g, normalise=c("laplacian","row","column","none"), setSeeds=NULL, restart=0.75, normalise.affinity.matrix=c("none","quantile"), verbose=TRUE)
 {
     
     startT <- Sys.time()
@@ -267,38 +265,8 @@ oRWR <- function(g, normalise=c("laplacian","row","column","none"), setSeeds=NUL
         PTmatrix <- P0matrix
     }else{
         
-        ###### parallel computing
-        flag_parallel <- FALSE
-        if(parallel==TRUE){
-
-            flag_parallel <- oCheckParallel(multicores=multicores, verbose=verbose)
-            if(flag_parallel){
-                j <- 1
-                PTmatrix <- foreach::`%dopar%` (foreach::foreach(j=1:ncol(P0matrix), .inorder=TRUE, .combine='cbind'), {
-                    progress_indicate(j, ncol(P0matrix), 10, flag=TRUE)
-                    P0 <- P0matrix[,j]
-                    ## Initializing variables
-                    step <- 0
-                    delta <- 1
-                    PT <- P0
-                    ## Iterative update till convergence (delta<=1e-10)
-                    while (delta>stop_delta && step<=stop_step){
-                        PX <- (1-r) * nadjM %*% PT + r * P0
-                        # p-norm of v: sum((abs(v).p)^(1/p))
-                        delta <- sum(abs(PX-PT))
-                        PT <- PX
-                        step <- step+1
-                    }
-                    as.matrix(PT)
-                })
-                    
-                #PTmatrix[PTmatrix<1e-6] <- 0
-                #PTmatrix <- Matrix::Matrix(PTmatrix, sparse=TRUE)
-            }
-        }
-        
         ###### non-parallel computing
-        if(flag_parallel==FALSE){
+        if(1){
             PTmatrix <- Matrix::Matrix(0, nrow=nrow(P0matrix), ncol=ncol(P0matrix), sparse=TRUE)
             for(j in 1:ncol(P0matrix)){
                 #P0 <- as.matrix(P0matrix[,j],ncol=1)

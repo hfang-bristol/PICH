@@ -6,7 +6,7 @@
 \usage{
 oRepurpose(
 data,
-phase.min = 3,
+phase.min = 4,
 target.max = 5,
 plot = TRUE,
 verbose = T,

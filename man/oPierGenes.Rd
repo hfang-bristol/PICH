@@ -27,8 +27,7 @@ seeds.inclusive = TRUE,
 normalise = c("laplacian", "row", "column", "none"),
 restart = 0.7,
 normalise.affinity.matrix = c("none", "quantile"),
-parallel = TRUE,
-multicores = NULL,
+GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
 verbose = TRUE,
 placeholder = NULL,
 guid = NULL
@@ -99,7 +98,9 @@ is NULL. It is designed to allow the user analysing their customised
 network data that are not listed in the above argument 'network'. This
 customisation (if provided) has the high priority over built-in
 network. If the user provides the "igraph" object with the "weight"
-edge attribute, RWR will assume to walk on the weighted network}
+edge attribute, RWR will assume to walk on the weighted network. Also
+converted into an undirected graph internally if a directed graph
+provided}
 
 \item{seeds.inclusive}{logical to indicate whether non-network seed
 genes are included for prioritisation. If TRUE (by default), these
@@ -124,16 +125,18 @@ affinity matrix. It can be 'none' for no normalisation, 'quantile' for
 quantile normalisation to ensure that columns (if multiple) of the
 output affinity matrix have the same quantiles}
 
-\item{parallel}{logical to indicate whether parallel computation with
-multicores is used. By default, it sets to true, but not necessarily
-does so. Partly because parallel backends available will be
-system-specific (now only Linux or Mac OS). Also, it will depend on
-whether these two packages "foreach" and "doMC" have been installed}
-
-\item{multicores}{an integer to specify how many cores will be
-registered as the multicore parallel backend to the 'foreach' package.
-If NULL, it will use a half of cores available in a user's computer.
-This option only works when parallel computation is enabled}
+\item{GR.Gene}{the genomic regions of genes. By default, it is
+'UCSC_knownGene', that is, UCSC known genes (together with genomic
+locations) based on human genome assembly hg19. It can be
+'UCSC_knownCanonical', that is, UCSC known canonical genes (together
+with genomic locations) based on human genome assembly hg19.
+Alternatively, the user can specify the customised input. To do so,
+first save your RData file (containing an GR object) into your local
+computer, and make sure the GR object content names refer to Gene
+Symbols. Then, tell "GR.Gene" with your RData file name (with or
+without extension), plus specify your file RData path in
+"RData.location". Note: you can also load your customised GR object
+directly}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to true for display}
@@ -161,9 +164,8 @@ rescaled to the range [0,1]), "rank" (ranks of the priority scores),
 \code{oPierGenes} is supposed to prioritise genes given an input graph
 and a list of seed nodes. It implements Random Walk with Restart (RWR)
 and calculates the affinity score of all nodes in the graph to the
-seeds. The priority score is the affinity score. Parallel computing is
-also supported for Linux-like or Windows operating systems. It returns
-an object of class "pNode".
+seeds. The priority score is the affinity score. It returns an object
+of class "pNode".
 }
 \note{
 The input graph will treat as an unweighted graph if there is no

@@ -16,7 +16,6 @@
 #' @param y.lab the y labelling. If NULL (by default), it shows the column of input data
 #' @param GR.Gene the genomic regions of genes. By default, it is 'UCSC_knownGene', that is, UCSC known genes (together with genomic locations) based on human genome assembly hg19. It can be 'UCSC_knownCanonical', that is, UCSC known canonical genes (together with genomic locations) based on human genome assembly hg19. Alternatively, the user can specify the customised input. To do so, first save your RData file (containing an GR object) into your local computer, and make sure the GR object content names refer to Gene Symbols. Then, tell "GR.Gene" with your RData file name (with or without extension), plus specify your file RData path in "placeholder"
 #' @param font.family the font family for texts
-#' @param signature logical to indicate whether the signature is assigned to the plot caption. By default, it sets TRUE
 #' @param verbose logical to indicate whether the messages will be displayed in the screen. By default, it sets to false for no display
 #' @param placeholder the characters to tell the location of built-in RData files. See \code{\link{oRDS}} for details
 #' @param guid a valid (5-character) Global Unique IDentifier for an OSF project. See \code{\link{oRDS}} for details
@@ -44,7 +43,7 @@
 #' mp
 #' }
 
-oPierManhattan <- function(pNode, color=c("darkred","darkgreen"), point.size=0.5, top=50, top.label.type=c("box","text"), top.label.size=2, top.label.col="darkblue", top.label.query=NULL, label.query.only=FALSE, chromosome.only=TRUE, y.scale=c("normal","sqrt","log"), y.lab=NULL, GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), font.family="sans", signature=TRUE, verbose=TRUE, placeholder=NULL, guid=NULL, ...)
+oPierManhattan <- function(pNode, color=c("darkred","steelblue4"), point.size=0.2, top=10000, top.label.type=c("text","box"), top.label.size=2, top.label.col="black", top.label.query=NULL, label.query.only=FALSE, chromosome.only=TRUE, y.scale=c("normal","sqrt","log"), y.lab=NULL, GR.Gene=c("UCSC_knownGene","UCSC_knownCanonical"), font.family="sans", verbose=TRUE, placeholder=NULL, guid=NULL, ...)
 {
 
     ## match.arg matches arg against a table of candidate values as specified by choices, where NULL means to take the first one
@@ -64,13 +63,17 @@ oPierManhattan <- function(pNode, color=c("darkred","darkgreen"), point.size=0.5
 		now <- Sys.time()
 		message(sprintf("Load positional information for Genes (%s) ...", as.character(now)), appendLF=TRUE)
 	}
-    gr_Gene <- oRDS(GR.Gene[1], verbose=verbose, placeholder=placeholder, guid=guid)
-    if(is.null(gr_Gene)){
-    	GR.Gene <- "UCSC_knownGene"
-		if(verbose){
-			message(sprintf("Instead, %s will be used", GR.Gene), appendLF=TRUE)
+	if(is(GR.Gene,"GRanges")){
+		gr_Gene <- GR.Gene
+	}else{	
+		gr_Gene <- oRDS(GR.Gene[1], verbose=verbose, placeholder=placeholder, guid=guid)
+		if(is.null(gr_Gene)){
+			GR.Gene <- "UCSC_knownGene"
+			if(verbose){
+				message(sprintf("Instead, %s will be used", GR.Gene), appendLF=TRUE)
+			}
+			gr_Gene <- oRDS(GR.Gene, verbose=verbose, placeholder=placeholder, guid=guid)
 		}
-    	gr_Gene <- oRDS(GR.Gene, verbose=verbose, placeholder=placeholder, guid=guid)
     }
     
     ## ONLY restricted to genes with genomic locations
@@ -118,7 +121,7 @@ oPierManhattan <- function(pNode, color=c("darkred","darkgreen"), point.size=0.5
 	priority <- seqnames <- priority <- NULL
 	###############################
 	## calling ggbio::autoplot
-	suppressMessages(ggp <- ggbio::autoplot(object=gr, aes(y=priority,color=seqnames,alpha=priority), coord="genome", geom='point', space.skip=0.01, size=point.size))
+	suppressWarnings(suppressMessages(ggp <- ggbio::autoplot(object=gr, aes(y=priority,color=seqnames,alpha=priority), coord="genome", geom='point', space.skip=0.01, size=point.size)))
 	
 	## extract ggplot
 	bp <- ggp@ggplot
@@ -212,17 +215,12 @@ oPierManhattan <- function(pNode, color=c("darkred","darkgreen"), point.size=0.5
 	
 	bp <- bp + theme(axis.title.y=element_text(size=12), axis.text.y=element_text(color="black",size=8), axis.text.x=element_text(angle=45, hjust=1,color="black",size=10), panel.background=element_rect(fill=grDevices::rgb(0.98,0.98,0.98,1)))
 	
-	## caption
-    if(signature){
-    	caption <- paste("Created by oPierManhattan from Pi version", utils::packageVersion("Pi"))
-    	bp <- bp + labs(caption=caption) + theme(plot.caption=element_text(hjust=1,face='bold.italic',size=8,colour='#002147'))
-    }
-	
 	## change font family to 'Arial'
 	bp <- bp + theme(text=element_text(family=font.family))
 	
 	## put arrows on y-axis and x-axis
-	bp <- bp + theme(axis.line.y=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")), axis.line.x=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
+	#bp <- bp + theme(axis.line.y=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")), axis.line.x=element_line(arrow=arrow(angle=30,length=unit(0.25,"cm"), type="open")))
+	bp <- bp + theme(axis.line.y=element_line(), axis.line.x=element_line())
 
     mp <- bp
     mp$gr <- gr

@@ -13,7 +13,7 @@
 #' @import igraph
 #' @import ggplot2
 #' @importFrom BiocGenerics unlist start end
-#' @importFrom dplyr any_vars arrange arrange_all bind_rows desc distinct filter filter_at group_by mutate n_distinct progress_estimated select select_at semi_join slice summarise transmute ungroup vars count n bind_cols all_of arrange as_tibble pull
+#' @importFrom dplyr any_vars arrange arrange_all bind_rows desc distinct filter filter_at group_by mutate n_distinct progress_estimated select select_at semi_join slice summarise transmute ungroup vars count n bind_cols all_of arrange as_tibble pull reframe
 #' @importFrom forcats fct_inorder
 #' @importFrom GenomicRanges findOverlaps distance mcols seqnames as.data.frame GRangesList GRanges split start end
 #' @importFrom ggnetwork ggnetwork geom_nodes geom_edges
@@ -26,7 +26,7 @@
 #' @importFrom purrr map map2 map_dbl map_int map_lgl
 #' @importFrom readr read_delim
 #' @importFrom stats approx splinefun integrate sd median mad ecdf na.omit predict prcomp lm quantile as.dist hclust cor as.dendrogram order.dendrogram wilcox.test coef p.adjust dist ecdf pexp predict t.test
-#' @importFrom stringr str_detect str_replace str_replace_all str_split str_to_title str_c
+#' @importFrom stringr str_detect str_replace str_replace_all str_split str_to_title str_c str_count
 #' @importFrom tibble as_tibble deframe enframe
 #' @importFrom tidyr gather spread
 #' @importFrom XML htmlTreeParse xmlGetAttr

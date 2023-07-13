@@ -6,12 +6,12 @@
 \usage{
 oPierManhattan(
 pNode,
-color = c("darkred", "darkgreen"),
-point.size = 0.5,
-top = 50,
-top.label.type = c("box", "text"),
+color = c("darkred", "steelblue4"),
+point.size = 0.2,
+top = 10000,
+top.label.type = c("text", "box"),
 top.label.size = 2,
-top.label.col = "darkblue",
+top.label.col = "black",
 top.label.query = NULL,
 label.query.only = FALSE,
 chromosome.only = TRUE,
@@ -19,7 +19,6 @@ y.scale = c("normal", "sqrt", "log"),
 y.lab = NULL,
 GR.Gene = c("UCSC_knownGene", "UCSC_knownCanonical"),
 font.family = "sans",
-signature = TRUE,
 verbose = TRUE,
 placeholder = NULL,
 guid = NULL,
@@ -75,9 +74,6 @@ Symbols. Then, tell "GR.Gene" with your RData file name (with or
 without extension), plus specify your file RData path in "placeholder"}
 
 \item{font.family}{the font family for texts}
-
-\item{signature}{logical to indicate whether the signature is assigned
-to the plot caption. By default, it sets TRUE}
 
 \item{verbose}{logical to indicate whether the messages will be
 displayed in the screen. By default, it sets to false for no display}

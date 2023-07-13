@@ -114,7 +114,7 @@ oSEAupset <- function(obj, top=10, adjp.cutoff=0.05, color="steelblue4", shape=1
 	
 	###########################################
 	
-	df %>% ggplot(aes(x=name_overlap,y=-log10(adjp))) + geom_col(fill="steelblue", color='transparent', width=0.1, alpha=0.7) + geom_point(aes(size=nO), shape=shape, color=color, fill='white', alpha=0.6) + theme_classic() + theme(axis.title.x=element_blank()) + ggrepel::geom_text_repel(aes(label=name), color='steelblue4', size=2, segment.color='grey80', segment.alpha=0.5, max.overlaps=Inf) -> gp
+	df %>% ggplot(aes(x=name_overlap,y=-log10(adjp))) + geom_col(fill="steelblue", color='transparent', width=0.1, alpha=0.8) + geom_point(aes(size=nO), shape=shape, color=color, fill='white', alpha=0.8) + theme_classic() + theme(axis.title.x=element_blank()) + ggrepel::geom_text_repel(aes(label=name), color='black', size=2, segment.color='grey80', segment.alpha=0.5, max.overlaps=Inf) -> gp
 	
 	########################
 	levels <- NULL
@@ -136,7 +136,7 @@ oSEAupset <- function(obj, top=10, adjp.cutoff=0.05, color="steelblue4", shape=1
 	########################
 	gp + ggupset::axis_combmatrix(sep=", |,", levels=levels) + ggupset::theme_combmatrix(combmatrix.panel.point.color.fill="steelblue", combmatrix.panel.point.color.empty="grey90", combmatrix.panel.point.size=1.5, combmatrix.panel.line.size=0.1, combmatrix.label.height=unit(label.height.unit*(length(levels)+1),"pt"), combmatrix.label.text=element_text(size=label.height.unit)) -> gp
 	#gp + facet_grid(.~namespace,scales="free_x",space="free_x")
-	gp <- gp + theme(axis.title.x=element_blank()) + ylab('-log10(adjP)')
+	gp <- gp + theme(axis.title.x=element_blank()) + ylab(expression(-log[10]("FDR")))
 	
 	## size
 	gp <- gp + scale_size_continuous(limits=slim, range=size.range, guide=guide_legend(size.title,title.position="top",keywidth=0.4,ncol=1,order=1))
