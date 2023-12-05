@@ -41,9 +41,9 @@ oVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","simple"
     node.info <- match.arg(node.info)
 	
 	##############################
-	if(is(xTarget$priorty,"tbl")){
+	if(is(xTarget$priority,"tbl")){
 		name1 <- NULL
-		xTarget$priorty <- xTarget$priorty %>% dplyr::mutate(name1=name) %>%  tibble::column_to_rownames("name1")
+		xTarget$priority <- xTarget$priority %>% dplyr::mutate(name1=name) %>%  tibble::column_to_rownames("name1")
 	}
 	##############################
 	
