@@ -44,7 +44,8 @@ oPierSubnet <- function(pNode, priority.quantile=0.1, network=NA, STRING.only=NA
     
     if(is(pNode,"pNode")){
     	if(is(pNode$priority,"tbl")){
-    		df_priority <- pNode$priority %>% tibble::column_to_rownames('name')
+    		name1 <- NULL
+    		df_priority <- pNode$priority %>% dplyr::mutate(name1=name) %>% tibble::column_to_rownames('name1')
     	}else{
     		df_priority <- pNode$priority
     	}
@@ -69,7 +70,8 @@ oPierSubnet <- function(pNode, priority.quantile=0.1, network=NA, STRING.only=NA
 		
 	}else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
     	if(is(pNode$priority,"tbl")){
-    		df_priority <- pNode$priority %>% tibble::column_to_rownames('name')
+    		name1 <- NULL
+    		df_priority <- pNode$priority %>% dplyr::mutate(name1=name) %>% tibble::column_to_rownames('name1')
     	}else{
     		df_priority <- pNode$priority
     	}
