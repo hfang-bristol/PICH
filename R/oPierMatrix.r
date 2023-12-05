@@ -151,7 +151,11 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 	if(displayBy!='evidence'){
 		## Combine into a data frame called 'df_predictor'
 		ls_priority <- pbapply::pblapply(list_pNode, function(pNode){
-			p <- pNode$priority %>% tibble::column_to_rownames('name')
+			if(is(pNode$priority,"tbl")){
+				p <- pNode$priority %>% tibble::column_to_rownames('name')
+			}else{
+				p <- pNode$priority
+			}
 			ind <- match(nodes, rownames(p))
 			#ind <- ind[!is.na(ind)]
 			if(displayBy=='score' | displayBy=='pvalue'){
@@ -263,7 +267,14 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 				#################
 				ind <- match(unique(predictor_names), colnames(mat_evidence))
 			}
-			priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=FALSE)
+			
+			if(length(ind) == 1){
+				# only one predictor type
+				priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence, stringsAsFactors=FALSE)
+			}else{
+				priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=FALSE)
+			}
+			
 			
 			priority <- priority %>% tibble::as_tibble()
 			df_predictor <- df_predictor %>% tibble::as_tibble()
@@ -379,7 +390,14 @@ oPierMatrix <- function(list_pNode, displayBy=c("score","rank","weight","pvalue"
 				#################
 				ind <- match(unique(predictor_names), colnames(mat_evidence))
 			}
-			priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=FALSE)
+			
+			if(length(ind) == 1){
+				# only one predictor type
+				priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence, stringsAsFactors=FALSE)
+			}else{
+				priority <- data.frame(df_priority[,c("name","rank","rating","description")], seed=ifelse(overall!=0,'Y','N'), mat_evidence[,ind[!is.na(ind)]], stringsAsFactors=FALSE)
+			}
+			
 			
 			priority <- priority %>% tibble::as_tibble()
 			df_predictor <- df_predictor %>% tibble::as_tibble()

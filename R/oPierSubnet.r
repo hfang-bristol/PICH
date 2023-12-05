@@ -43,7 +43,12 @@ oPierSubnet <- function(pNode, priority.quantile=0.1, network=NA, STRING.only=NA
     aggregateBy <- match.arg(aggregateBy)
     
     if(is(pNode,"pNode")){
-        df_priority <- pNode$priority[, c("name","seed","weight","priority")] %>% tibble::column_to_rownames("name")
+    	if(is(pNode$priority,"tbl")){
+    		df_priority <- pNode$priority %>% tibble::column_to_rownames('name')
+    	}else{
+    		df_priority <- pNode$priority
+    	}
+        df_priority <- df_priority[, c("name","seed","weight","priority")]
         
 		network <- network[1]
 		if(!is.na(network)){
@@ -63,7 +68,12 @@ oPierSubnet <- function(pNode, priority.quantile=0.1, network=NA, STRING.only=NA
 		pval <- 10^(-100*y)
 		
 	}else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
-    	df_priority <- pNode$priority[, c("name","rank","rating")] %>% tibble::column_to_rownames("name")
+    	if(is(pNode$priority,"tbl")){
+    		df_priority <- pNode$priority %>% tibble::column_to_rownames('name')
+    	}else{
+    		df_priority <- pNode$priority
+    	}
+    	df_priority <- df_priority[, c("name","rank","rating")]
     	df_priority$priority <- df_priority$rating
     	
     	network <- network[1]

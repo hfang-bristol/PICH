@@ -43,7 +43,7 @@ oVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","simple"
 	##############################
 	if(is(xTarget$priorty,"tbl")){
 		name1 <- NULL
-		xTarget$priorty <- xTarget$priorty %>%  dplyr::mutate(name1=name) %>%  tibble::column_to_rownames("name1")
+		xTarget$priorty <- xTarget$priorty %>% dplyr::mutate(name1=name) %>%  tibble::column_to_rownames("name1")
 	}
 	##############################
 	

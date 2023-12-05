@@ -51,10 +51,22 @@ oPierManhattan <- function(pNode, color=c("darkred","steelblue4"), point.size=0.
     y.scale <- match.arg(y.scale)
 
     if(is(pNode,"pNode")){
-        df_priority <- pNode$priority[, c("name","weight","priority")]
+    	if(is(pNode$priority,"tbl")){
+    		df_priority <- pNode$priority %>% tibble::column_to_rownames('name')
+    	}else{
+    		df_priority <- pNode$priority
+    	}
+        df_priority <- df_priority[, c("name","weight","priority")]
+        
     }else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
-    	df_priority <- pNode$priority[, c("name","rank","rating")]
+    	if(is(pNode$priority,"tbl")){
+    		df_priority <- pNode$priority %>% tibble::column_to_rownames('name')
+    	}else{
+    		df_priority <- pNode$priority
+    	}
+    	df_priority <- df_priority[, c("name","rank","rating")]
     	df_priority$priority <- df_priority$rating
+    	
     }else{
     	stop("The function must apply to a 'pNode' or 'sTarget' or 'dTarget' object.\n")
     }
