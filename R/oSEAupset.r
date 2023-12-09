@@ -73,9 +73,11 @@ oSEAupset <- function(obj, top=10, adjp.cutoff=0.05, color="steelblue4", shape=1
 	## important: the column 'overlap' is not necessarily unique
 	
 	if(sortBy=='pvalue'){
+		pvalue <- name <- NULL
 		df %>% dplyr::filter(adjp<adjp.cutoff) %>% dplyr::arrange(pvalue,name) %>% distinct(name_overlap,.keep_all=TRUE) %>% dplyr::mutate(name_overlap=forcats::fct_inorder(name_overlap)) -> df
 	}else if(sortBy=='name'){
-		df %>% dplyr::filter(adjp<adjp.cutoff) %>% dplyr::arrange(name) %>% distinct(name_overlap,.keep_all=TRUE) %>%  dplyr::mutate(name_overlap=forcats::fct_inorder(name_overlap)) -> df
+		name_overlap <- name <- NULL
+		df %>% dplyr::filter(adjp<adjp.cutoff) %>% dplyr::arrange(name) %>% dplyr::distinct(name_overlap,.keep_all=TRUE) %>%  dplyr::mutate(name_overlap=forcats::fct_inorder(name_overlap)) -> df
 	}
 	#df %>% dplyr::filter(adjp<adjp.cutoff) %>% dplyr::arrange(adjp,name) -> df
 	

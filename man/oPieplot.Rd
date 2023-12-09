@@ -32,7 +32,7 @@ default color palette). Alternatively, any hyphen-separated HTML color
 names, e.g. "lightyellow-orange" (by default), "blue-black-yellow",
 "royalblue-white-sandybrown", "darkgreen-white-darkviolet". A list of
 standard color names can be found in
-\url{http://html-color-codes.info/color-names}}
+\url{https://html-color-codes.info/color-names/index.html}}
 
 \item{pie.radius}{the radius of a pie. If NULL, it equals roughly 1/75}
 

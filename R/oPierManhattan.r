@@ -52,7 +52,7 @@ oPierManhattan <- function(pNode, color=c("darkred","steelblue4"), point.size=0.
 
     if(is(pNode,"pNode")){
     	if(is(pNode$priority,"tbl")){
-    		name1 <- NULL
+    		name <- NULL
     		df_priority <- pNode$priority %>% dplyr::mutate(name1=name) %>% tibble::column_to_rownames('name1')
     	}else{
     		df_priority <- pNode$priority
@@ -61,7 +61,7 @@ oPierManhattan <- function(pNode, color=c("darkred","steelblue4"), point.size=0.
         
     }else if(is(pNode,"sTarget") | is(pNode,"dTarget")){
     	if(is(pNode$priority,"tbl")){
-    		name1 <- NULL
+    		name <- NULL
     		df_priority <- pNode$priority %>% dplyr::mutate(name1=name) %>% tibble::column_to_rownames('name1')
     	}else{
     		df_priority <- pNode$priority

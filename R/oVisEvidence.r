@@ -11,7 +11,7 @@
 #' @param neighbor.top the top number of the neighbors with the highest priority. By default, it sets to NULL to disable this parameter
 #' @param largest.comp logical to indicate whether the largest component is only retained. By default, it sets to true for the largest component being left
 #' @param show logical to indicate whether to show the graph
-#' @param colormap short name for the colormap. It can be one of "jet" (jet colormap), "bwr" (blue-white-red colormap), "gbr" (green-black-red colormap), "wyr" (white-yellow-red colormap), "br" (black-red colormap), "yr" (yellow-red colormap), "wb" (white-black colormap), "rainbow" (rainbow colormap, that is, red-yellow-green-cyan-blue-magenta), and "ggplot2" (emulating ggplot2 default color palette). Alternatively, any hyphen-separated HTML color names, e.g. "lightyellow-orange" (by default), "blue-black-yellow", "royalblue-white-sandybrown", "darkgreen-white-darkviolet". A list of standard color names can be found in \url{http://html-color-codes.info/color-names}
+#' @param colormap short name for the colormap. It can be one of "jet" (jet colormap), "bwr" (blue-white-red colormap), "gbr" (green-black-red colormap), "wyr" (white-yellow-red colormap), "br" (black-red colormap), "yr" (yellow-red colormap), "wb" (white-black colormap), "rainbow" (rainbow colormap, that is, red-yellow-green-cyan-blue-magenta), and "ggplot2" (emulating ggplot2 default color palette). Alternatively, any hyphen-separated HTML color names, e.g. "lightyellow-orange" (by default), "blue-black-yellow", "royalblue-white-sandybrown", "darkgreen-white-darkviolet". A list of standard color names can be found in \url{https://html-color-codes.info/color-names/index.html}
 #' @param legend.position the legend position. If NA, the legend is not shown
 #' @param legend.horiz logical specifying the legend horizon. If TRUE, set the legend horizontally rather than vertically
 #' @param mtext.side the side of marginal text. If NA, it is not shown
@@ -42,7 +42,7 @@ oVisEvidence <- function(xTarget, g=NA, nodes=NULL, node.info=c("smart","simple"
 	
 	##############################
 	if(is(xTarget$priority,"tbl")){
-		name1 <- NULL
+		name <- NULL
 		xTarget$priority <- xTarget$priority %>% dplyr::mutate(name1=name) %>%  tibble::column_to_rownames("name1")
 	}
 	##############################
